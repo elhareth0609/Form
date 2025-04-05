@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Document;
 use App\Models\Permission;
+use App\Models\Record;
 use App\Models\Role;
 use App\Models\Sim;
 use App\Models\Station;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,62 +56,62 @@ class DataTabelController extends Controller {
         return view('content.dashboard.users.list');
     }
 
-    public function stations(Request $request) {
-        $query = Station::query();
+    public function records(Request $request) {
+        $query = Record::query();
 
-        if ($request->has('type') && $request->type != 'all') {
-            if ($request->type == 'active') {
-                $query->where('status', 'active');
-            } elseif ($request->type == 'inactive') {
-                $query->where('status', 'inactive');
-            }
-        }
+        // if ($request->has('type') && $request->type != 'all') {
+        //     if ($request->type == 'active') {
+        //         $query->where('status', 'active');
+        //     } elseif ($request->type == 'inactive') {
+        //         $query->where('status', 'inactive');
+        //     }
+        // }
 
-        $stations = $query->get();
+        $records = $query->get();
 
-        $ids = $stations->pluck('id');
+        $ids = $records->pluck('id');
         if($request->ajax()) {
-            return DataTables::of($stations)
-            ->editColumn('id', function ($station) {
-                return (string) $station->id;
+            return DataTables::of($records)
+            ->editColumn('id', function ($record) {
+                return (string) $record->id;
             })
-            ->editColumn('user_id', function ($station) {
-                return $station->client->full_name;
+            ->editColumn('user_id', function ($record) {
+                return $record->user->full_name;
             })
-            ->editColumn('name', function ($station) {
-                return $station->name;
+            ->addColumn('full_name', function ($station) {
+                return $station->full_name;
             })
-            ->editColumn('code', function ($station) {
-                return $station->code;
-            })
-            ->editColumn('status', function ($station) {
-                if ($station->status == 'active') {
+            // ->editColumn('code', function ($station) {
+            //     return $station->code;
+            // })
+            ->editColumn('status', function ($record) {
+                if ($record->status == 'active') {
                     return '<span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill">'. __('Active') .'</span>';
                 } else {
                     return '<span class="badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">'. __('In Active') .'</span>';
                 }
             })
-            ->addColumn('sims', function ($station) {
-                return $station->sims->count();
+            // ->addColumn('sims', function ($station) {
+            //     return $station->sims->count();
+            // })
+            ->editColumn('created_at', function ($record) {
+                return $record->created_at->format('Y-m-d');
             })
-            ->editColumn('created_at', function ($station) {
-                return $station->created_at->format('Y-m-d');
-            })
-            ->addColumn('actions', function ($station) use ($request) {
+            ->addColumn('actions', function ($record) use ($request) {
                     return '
-                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-primary" onclick="editStation(' . $station->id . ')"><i class="mdi mdi-pencil"></i></a>
-                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-danger" onclick="deleteStation(' . $station->id . ')"><i class="mdi mdi-trash-can"></i></a>
+                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-primary" onclick="editRecord(' . $record->id . ')"><i class="mdi mdi-pencil"></i></a>
+                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-danger" onclick="deleteRecord(' . $record->id . ')"><i class="mdi mdi-trash-can"></i></a>
                     ';
             })
             ->rawColumns(['status','actions'])
             ->with('ids', $ids)
             ->make(true);
         }
-        return view('content.dashboard.stations.list');
+        return view('content.dashboard.records.list');
     }
 
-    public function sims(Request $request) {
-        $query = Sim::query();
+    public function documents(Request $request) {
+        $query = Document::query();
 
         if ($request->has('type') && $request->type != 'all') {
             if ($request->type == 'active') {
@@ -118,42 +121,45 @@ class DataTabelController extends Controller {
             }
         }
 
-        $sims = $query->get();
+        $documents = $query->get();
 
-        $ids = $sims->pluck('id');
+        $ids = $documents->pluck('id');
         if($request->ajax()) {
-            return DataTables::of($sims)
-            ->editColumn('id', function ($sim) {
-                return (string) $sim->id;
+            return DataTables::of($documents)
+            ->editColumn('id', function ($document) {
+                return (string) $document->id;
             })
-            ->editColumn('name', function ($sim) {
-                return $sim->name;
+            ->editColumn('name', function ($document) {
+                return $document->name;
             })
-            ->editColumn('status', function ($sim) {
-                if ($sim->status == 'active') {
+            // ->editColumn('file', function ($document) { // link of file
+            //     return $document->file;
+            // })
+            ->editColumn('status', function ($document) {
+                if ($document->status == 'active') {
                     return '<span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill">'. __('Active') .'</span>';
                 } else {
                     return '<span class="badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">'. __('In Active') .'</span>';
                 }
             })
-            ->editColumn('created_at', function ($sim) {
-                return $sim->created_at->format('Y-m-d');
+            ->editColumn('created_at', function ($document) {
+                return $document->created_at->format('Y-m-d');
             })
-            ->addColumn('actions', function ($sim) use ($request) {
+            ->addColumn('actions', function ($document) use ($request) {
                     return '
-                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-primary" onclick="editStation(' . $sim->id . ')"><i class="mdi mdi-pencil"></i></a>
-                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-danger" onclick="deleteStation(' . $sim->id . ')"><i class="mdi mdi-trash-can"></i></a>
+                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-primary" onclick="editDocument(' . $document->id . ')"><i class="mdi mdi-pencil"></i></a>
+                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-danger" onclick="deleteDocument(' . $document->id . ')"><i class="mdi mdi-trash-can"></i></a>
                     ';
             })
             ->rawColumns(['status','actions'])
             ->with('ids', $ids)
             ->make(true);
         }
-        return view('content.dashboard.sims.list');
+        return view('content.dashboard.documents.list');
     }
 
     public function transactions(Request $request) {
-        $query = Sim::query();
+        $query = Transaction::query();
 
         if ($request->has('type') && $request->type != 'all') {
             if ($request->type == 'active') {
@@ -174,6 +180,9 @@ class DataTabelController extends Controller {
             ->editColumn('name', function ($transaction) {
                 return $transaction->name;
             })
+            ->editColumn('amount', function ($transaction) {
+                return $transaction->amount;
+            })
             ->editColumn('status', function ($transaction) {
                 if ($transaction->status == 'active') {
                     return '<span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill">'. __('Active') .'</span>';
@@ -186,8 +195,8 @@ class DataTabelController extends Controller {
             })
             ->addColumn('actions', function ($transaction) use ($request) {
                     return '
-                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-primary" onclick="editStation(' . $transaction->id . ')"><i class="mdi mdi-pencil"></i></a>
-                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-danger" onclick="deleteStation(' . $transaction->id . ')"><i class="mdi mdi-trash-can"></i></a>
+                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-primary" onclick="editTransaction(' . $transaction->id . ')"><i class="mdi mdi-pencil"></i></a>
+                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-danger" onclick="deleteTransaction(' . $transaction->id . ')"><i class="mdi mdi-trash-can"></i></a>
                     ';
             })
             ->rawColumns(['status','actions'])
@@ -196,6 +205,7 @@ class DataTabelController extends Controller {
         }
         return view('content.dashboard.transactions.list');
     }
+
     public function languages(Request $request) {
         $languages = [];
         foreach (config('language') as $locale => $language) {

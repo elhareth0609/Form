@@ -55,7 +55,6 @@ class User extends Authenticatable
         return $this->first_name . ' ' . $this->last_name;
     }
 
-
     public function getPhotoUrlAttribute() {
         return $this->photo ? asset('assets/img/photos/users/' . $this->photo) : asset('assets/img/photos/users/default.png');
     }
@@ -65,7 +64,7 @@ class User extends Authenticatable
     }
 
     public function role() {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
     public function hasRole($roleName) {

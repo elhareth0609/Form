@@ -13,10 +13,10 @@
 
             <select class="form-select my-w-fit-content m-1" id="selectType" name="type">
                 <option value="all">{{ __('All') }}</option>
-                <option value="staff">{{ __('Staffs') }}</option>
+                {{-- <option value="staff">{{ __('Staffs') }}</option>
                 <option value="admin">{{ __('Admins') }}</option>
                 <option value="driver">{{ __('Drivers') }}</option>
-                <option value="client">{{ __('Clients') }}</option>
+                <option value="client">{{ __('Clients') }}</option> --}}
             </select>
 
             <select class="form-select my-w-fit-content m-1" id="dataTables_my_length" name="length">

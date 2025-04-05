@@ -37,7 +37,7 @@
                 </li>
 
                 <!-- Nav Item - Alerts -->
-                <li class="nav-item dropdown no-arrow mx-1 d-flex align-items-center">
+                {{-- <li class="nav-item dropdown no-arrow mx-1 d-flex align-items-center">
                     <a class="btn btn-outline-primary rounded-circle p-2 lh-1 position-relative overflow-visible" href="#" id="alertsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="mdi mdi-bell-outline"></span>
                             <span class="position-absolute top-25 start-100 translate-middle p-1 bg-primary border border-light rounded-circle">
@@ -84,11 +84,11 @@
                         </a>
                         <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
                     </div>
-                </li>
+                </li> --}}
 
 
                 <!-- Nav Item - Messages -->
-                <li class="nav-item dropdown no-arrow mx-1 d-flex align-items-center">
+                {{-- <li class="nav-item dropdown no-arrow mx-1 d-flex align-items-center">
                     <a class="btn btn-outline-primary rounded-circle p-2 lh-1" href="#" id="messagesDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="mdi mdi-email-outline"></span>
                     </a>
@@ -143,7 +143,7 @@
                         </a>
                         <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
                     </div>
-                </li>
+                </li> --}}
 
                 <!-- Nav Item - language -->
                 <li class="nav-item dropdown no-arrow mx-1 d-flex align-items-center">

@@ -1,13 +1,13 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ClientController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\DataTabelController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\SettingController;
-use App\Http\Controllers\SimController;
-use App\Http\Controllers\StationController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\RecordController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -33,10 +33,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     Route::get('users', [DataTabelController::class, 'users'])->name('users');
-    Route::get('clients', [DataTabelController::class, 'clients'])->name('clients');
-    Route::get('datatabels', [DataTabelController::class, 'datatabels'])->name('datatabels');
-    Route::get('stations', [DataTabelController::class, 'stations'])->name('stations');
-    Route::get('sims', [DataTabelController::class, 'sims'])->name('sims');
+    Route::get('records', [DataTabelController::class, 'records'])->name('records');
+    Route::get('documents', [DataTabelController::class, 'documents'])->name('documents');
     Route::get('transactions', [DataTabelController::class, 'transactions'])->name('transactions');
     Route::get('languages', [DataTabelController::class, 'languages'])->name('languages');
 
@@ -44,20 +42,20 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::get('auth/destroy', [AuthController::class, 'destroy'])->name('auth.destroy');
 
-    // Sims
+    // Documents
     // Dashboard
-    Route::get('/sim/{id}', [SimController::class, 'get'])->name('sim.get');
-    Route::post('/sim/create', [SimController::class, 'create'])->name('sim.create');
-    Route::delete('/sim/{id}', [SimController::class, 'delete'])->name('sim.delete');
-    Route::put('/sim/{id}', [SimController::class, 'update'])->name('sim.update');
+    Route::get('/document/{id}', [DocumentController::class, 'get'])->name('document.get');
+    Route::post('/document/create', [DocumentController::class, 'create'])->name('document.create');
+    Route::delete('/document/{id}', [DocumentController::class, 'delete'])->name('document.delete');
+    Route::put('/document/{id}', [DocumentController::class, 'update'])->name('document.update');
 
-    // Clients
+    // Users
     // Dashboard
-    Route::get('/clients/all', [ClientController::class, 'all'])->name('clients.all');
-    Route::get('/client/{id}', [ClientController::class, 'get'])->name('client.get');
-    Route::post('/client/create', [ClientController::class, 'create'])->name('client.create');
-    Route::delete('/client/{id}', [ClientController::class, 'delete'])->name('client.delete');
-    Route::put('/client/{id}', [ClientController::class, 'update'])->name('client.update');
+    Route::get('/user/all', [UserController::class, 'all'])->name('user.all');
+    Route::get('/user/{id}', [UserController::class, 'get'])->name('user.get');
+    Route::post('/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::delete('/user/{id}', [UserController::class, 'delete'])->name('user.delete');
+    Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
 
     // Transactions
     // Dashboard
@@ -66,12 +64,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/transaction/{id}', [TransactionController::class, 'delete'])->name('transaction.delete');
     Route::put('/transaction/{id}', [TransactionController::class, 'update'])->name('transaction.update');
 
-    // Stations
+    // Records
     // Dashboard
-    Route::get('/station/{id}', [StationController::class, 'get'])->name('station.get');
-    Route::post('/station/create', [StationController::class, 'create'])->name('station.create');
-    Route::delete('/station/{id}', [StationController::class, 'delete'])->name('station.delete');
-    Route::put('/station/{id}', [StationController::class, 'update'])->name('station.update');
+    Route::get('/record/{id}', [RecordController::class, 'get'])->name('record.get');
+    Route::post('/record/create', [RecordController::class, 'create'])->name('record.create');
+    Route::delete('/record/{id}', [RecordController::class, 'delete'])->name('record.delete');
+    Route::put('/record/{id}', [RecordController::class, 'update'])->name('record.update');
 
     Route::post('/language', [LanguageController::class, 'create'])->name('language.create');
     Route::get('/language/{word}', [LanguageController::class, 'get'])->name('language.get');
@@ -79,9 +77,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/language/{word}', [LanguageController::class, 'destroy'])->name('language.destroy');
 
 
-    Route::get('settings/website', [SettingController::class, 'get_website'])->name('settings.website.get');
     Route::get('settings/account', [SettingController::class, 'get_account'])->name('settings.account.get');
-    Route::get('settings/pages', [SettingController::class, 'get_pages'])->name('settings.pages.get');
 
     Route::post('settings/account/update', [SettingController::class, 'update_account'])->name('settings.account.update');
 

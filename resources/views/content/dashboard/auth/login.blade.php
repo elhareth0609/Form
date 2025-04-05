@@ -25,11 +25,11 @@
         <!-- Logo -->
         <a class="d-flex align-items-center justify-content-center text-black fs-4 my-3" href="{{ route('home') }}">
             <div><i class="mdi mdi-home-outline"></i></div>
-            <div class="mx-3">{{ __('Station') }}</div>
+            <div class="mx-3">{{ __('Form') }}</div>
         </a>
 
         <!-- Welcome Text -->
-        <h5 class="mb-1">{{ __('Welcome To') }} {{ __('Station') }} 🎉</h5>
+        <h5 class="mb-1">{{ __('Welcome To') }} {{ __('Form') }} 🎉</h5>
         <p class="text-muted mb-3">{{ __('Please login to your account') }}</p>
         <div class="alert alert-danger d-none" id="error-alert"></div>
         <!-- Login Form -->

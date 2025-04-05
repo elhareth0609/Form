@@ -13,16 +13,16 @@
             "link" : "/users"
         },
         {
-            "title" : "Stations",
-            "icon" : "mdi mdi-antenna",
-            "name" : "stations",
-            "link" : "/stations"
+            "title" : "Records",
+            "icon" : "mdi mdi-folder-outline",
+            "name" : "records",
+            "link" : "/records"
         },
         {
-            "title" : "Sims",
-            "icon" : "mdi mdi-sim-outline",
-            "name" : "sims",
-            "link" : "/sims"
+            "title" : "Documents",
+            "icon" : "mdi mdi-file-document-outline",
+            "name" : "documents",
+            "link" : "/documents"
         },
         {
             "title" : "Transactions",
