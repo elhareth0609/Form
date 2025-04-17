@@ -20,6 +20,10 @@ class UserRepository implements UserRepositoryInterface {
         return $this->user->all();
     }
 
+    public function where($column, $value) {
+        return User::where($column, $value);
+    }
+
     public function create(array $data) {
         return $this->user->create($data);
     }

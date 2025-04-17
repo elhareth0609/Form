@@ -46,7 +46,9 @@
                         @endif
                         <th>{{ __('File') }}</th>
                         <th>{{ __('Created At') }}</th>
-                        <th>{{ __('Actions') }}</th>
+                        @if (Auth::user()->hasRole('admin'))
+                            <th>{{ __('Actions') }}</th>
+                        @endif
                     </tr>
                 </thead>
             </table>
@@ -74,8 +76,8 @@
                         <label for="name" class="form-label">{{ __('Name') }}</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="{{ __('Name') }}" data-v="required" required>
                     </div>
-                    <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
-                        <label for="file" class="form-label">{{ __('File') }}</label>
+                    <div class="form-group mb-3">
+                        {{-- <label for="file" class="form-label">{{ __('File') }}</label> --}}
                         <input type="file" class="form-control" id="file" name="file" placeholder="{{ __('File') }}" data-v="required" required>
                     </div>
                     <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
@@ -112,9 +114,9 @@
                         <input type="text" class="form-control" id="edit_name" name="name" placeholder="{{ __('Name') }}" data-v="required" required>
                         <label for="edit_name" class="form-label">{{ __('Name') }}</label>
                     </div>
-                    <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
-                        <label for="edit_file" class="form-label">{{ __('File') }}</label>
-                        <input type="file" class="form-control" id="edit_file" name="file" placeholder="{{ __('File') }}" data-v="required" required>
+                    <div class="form-group mb-3">
+                        {{-- <label for="edit_file" class="form-label">{{ __('File') }}</label> --}}
+                        <input type="file" class="form-control" id="edit_file" name="file" placeholder="{{ __('File') }}">
                     </div>
                     <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
                         <select class="form-select" id="edit_status" name="status" data-v="required" required>
@@ -141,7 +143,7 @@
     let isCheckAllTrigger = false;
     // End of checkboxes
 
-    function editdocument(id) {
+    function editDocument(id) {
         $('#loading').show();
 
         $.ajax({
@@ -150,15 +152,16 @@
             headers: {
                 'X-CSRF-TOKEN': csrfToken
             },
-            success: function(data) {
-            document = data.data;
-            console.log(document);
-            $('#edit_id').val(document.id);
-            $('#edit_name').val(document.name);
-            $('#edit_status').val(document.status).trigger('change');
+            success: function(response) {
+                console.log(response);
+                let document = response.data; // Use `response` instead of `data`
+                console.log(document.id);
+                $('#edit_id').val(document.id);
+                $('#edit_name').val(document.name);
+                $('#edit_status').val(document.status).trigger('change');
 
-            $('#loading').hide();
-            $('#editdocumentModal').modal('show');
+                $('#loading').hide();
+                $('#editdocumentModal').modal('show');
             },
             error: function(xhr, textStatus, errorThrown) {
                 const response = JSON.parse(xhr.responseText);
@@ -174,7 +177,7 @@
 
     }
 
-    function deletedocument(id) {
+    function deleteDocument(id) {
         confirmDelete({
             id: id,
             url: '/document',
@@ -182,13 +185,13 @@
         });
     }
 
-    function restoredocument(id) {
-        confirmRestore({
-            id: id,
-            url: '/document',
-            table: table
-        });
-    }
+    // function restoreDocument(id) {
+    //     confirmRestore({
+    //         id: id,
+    //         url: '/document',
+    //         table: table
+    //     });
+    // }
 
     function showContextMenu(id, x, y) {
 
@@ -246,13 +249,20 @@
                 // End  of checkboxes
                 {data: 'id', name: '{{__("Id")}}'},
                 {data: 'name', name: '{{__("Name")}}'},
+                @if (Auth::user()->hasRole('admin'))
+                {data: 'status', name: '{{__("Status")}}'},
+                @endif
                 {data: 'file', name: '{{__("File")}}'},
-                {data: 'status', name: '{{__("Status")}}'},  // if admin show this column
                 {data: 'created_at', name: '{{__("Created At")}}'},
-                {data: 'actions', name: '{{__("Actions")}}', orderable: false, searchable: false}
+                @if (Auth::user()->hasRole('admin'))
+                    {data: 'actions', name: '{{__("Actions")}}', orderable: false, searchable: false}
+                @endif
             ],
-            // order: [[4, 'desc']],   // if not admin
-            order: [[5, 'desc']], // if admin
+            @if (Auth::user()->hasRole('admin'))
+                order: [[5, 'desc']],   // if not admin
+            @else
+                order: [[4, 'desc']], // if admin
+            @endif
 
             rowCallback: function(row, data) {
                 $(row).attr('id', 'document_' + data.id);

@@ -15,6 +15,10 @@ class UserService {
         return $this->userRepository->find($id);
     }
 
+    public function allUser() {
+        return $this->userRepository->where('role_id', 2)->get();
+    }
+
     public function createUser(array $data) {
         return $this->userRepository->create($data);
     }

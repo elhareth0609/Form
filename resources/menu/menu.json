@@ -1,12 +1,6 @@
 {
     "sections": [
         {
-            "title": "Dashboard",
-            "icon": "mdi mdi-view-dashboard-outline",
-            "name": "dashboard",
-            "link": "/dashboard"
-        },
-        {
             "title" : "Users",
             "icon" : "mdi mdi-format-list-bulleted",
             "name" : "users",

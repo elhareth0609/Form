@@ -8,13 +8,13 @@
             </button>
 
             <!-- Topbar Search -->
-            <form
+            {{-- <form
                 class="d-none d-sm-inline-block form-inline {{ app()->isLocale("ar") ? 'ms-auto me-md-3' : 'me-auto ms-md-3' }} my-2 my-md-0 mw-100 navbar-search">
                 <div class="input-group {{ app()->isLocale("ar") ? 'input-rtl' : '' }}">
                     <input type="text" class="form-control" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
                     <button class="btn btn-outline-primary" type="button"><i class="mdi mdi-magnify"></i></button>
                 </div>
-            </form>
+            </form> --}}
 
             <!-- Topbar Navbar -->
             <ul class="navbar-nav {{ app()->isLocale("ar") ? 'me-auto' : 'ms-auto' }}">

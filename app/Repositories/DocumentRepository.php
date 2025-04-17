@@ -17,6 +17,11 @@ class DocumentRepository implements DocumentRepositoryInterface {
     }
 
     public function create(array $data) {
+        $file = $data['file'];
+        $name = time() . '.' . $file->extension();
+        $file->move(public_path('assets/files/documents'), $name);
+
+        $data['file'] = $name;
         return $this->document->create($data);
     }
 
@@ -27,7 +32,14 @@ class DocumentRepository implements DocumentRepositoryInterface {
     }
 
     public function delete($id) {
-        return $this->find($id)->delete();
+        $document = $this->find($id);
+        $filePath = public_path('assets/files/documents/' . $document->file);
+
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+
+        return $document->delete();
     }
 
 }

@@ -6,7 +6,7 @@
             <div class="sidebar-brand-icon">
                 <i class="mdi mdi-home-outline"></i>
             </div>
-            <div class="sidebar-brand-text mx-3">Dashboard</div>
+            <div class="sidebar-brand-text mx-3">Form</div>
         </a>
         <button type="button" class="border-0 bg-transparent" id="mySidebarToggle">
             <span class="mdi mdi-radiobox-marked"></span>
@@ -15,14 +15,18 @@
 
     <div class="scrollable-content">
         @foreach($menu['sections'] as $section)
+        
             @if (isset($section['type']) && $section['type'] == 'hr')
-            <div class="{{ app()->isLocale('ar') ? 'text-end' : 'text-start' }} nav-hr pt-2">
-                <hr class="text-center border-1 border-secondary">
-                <div class="{{ app()->isLocale('ar') ? 'text-end' : 'text-start' }} position-relative" style="margin-top: -32px;">
-                    <span class="bg-white text-secondary px-3 py-1">{{ __($section['title']) }}</span>
+                <div class="{{ app()->isLocale('ar') ? 'text-end' : 'text-start' }} nav-hr pt-2">
+                    <hr class="text-center border-1 border-secondary">
+                    <div class="{{ app()->isLocale('ar') ? 'text-end' : 'text-start' }} position-relative" style="margin-top: -32px;">
+                        <span class="bg-white text-secondary px-3 py-1">{{ __($section['title']) }}</span>
+                    </div>
                 </div>
-            </div>
             @else
+                @if (Auth::user()->hasRole('user') && ($section['name'] == 'users' || $section['name'] == 'transactions' || $section['name'] == 'languages') )
+                    @continue
+                @endif
                 @php
                     $isActiveSection = Route::currentRouteName() == $section['name'];
                     $isActiveSubmenu = false;

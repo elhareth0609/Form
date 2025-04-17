@@ -10,7 +10,7 @@ class RecordRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => $this->isMethod('PUT') ? 'required|exists:records' : '',
+            'id' => $this->routeIs('record.update') ? 'required|exists:records' : '',
             // 'user_id' => $this->isMethod('PUT') ? 'required|exists:users,id' : Auth::user()->id,
             'first_name' => 'required|string',
             'last_name' => 'required|string',
@@ -18,7 +18,7 @@ class RecordRequest extends FormRequest
             'birth_place' => 'required|string',
             'employment_year' => 'required|integer',
             'employment_rank' => 'required|string',
-            'status' => 'sometimes|in:active,inactive',
+            'status' => 'sometimes|in:accepted,rejected,in progress',
         ];
     }
 }

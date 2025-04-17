@@ -36,10 +36,11 @@
         <div class="card p-4">
             <ul class="nav nav-tabs mb-4">
                 <li class="nav-item"><a class="nav-link active" href="{{ route('settings.account.get') }}"><span class="mdi mdi-cog-outline me-2"></span>{{ __('Edit Profile') }}</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><span class="mdi mdi-key-outline me-2"></span>{{ __('Password') }}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('settings.password.get') }}"><span class="mdi mdi-key-outline me-2"></span>{{ __('Password') }}</a></li>
             </ul>
 
             <form id="editProfileForm" action="{{ route('settings.account.update') }}" method="POST">
+                @csrf
                 <div class="row mb-4">
                     <div class="mt-3 col-lg-3 col-md-12 text-center">
                         <div class="position-relative d-inline-block rounded-pill">
@@ -52,27 +53,34 @@
 
                     <div class="mt-3 col-lg-9 col-md-12">
                         <div class="ms-4 row">
-                            <div class="form-group form-group-floating col-md-6 mb-3">
-                                <input type="text" class="form-control" id="firstName" value="{{ Auth::user()->first_name }}">
-                                <label for="firstName" class="form-label">{{ __('First Name') }}</label>
-                            </div>
-                            <div class="form-group form-group-floating col-md-6 mb-3">
-                                <input type="text" class="form-control" id="lastName" value="{{ Auth::user()->last_name }}">
-                                <label for="lastName" class="form-label">{{ __('Last Name') }}</label>
-                            </div>
+                            @if (Auth::user()->hasRole('admin'))
+                                <div class="form-group form-group-floating col-md-6 mb-3">
+                                    <input type="text" class="form-control" name="first_name" id="firstName" value="{{ Auth::user()->first_name }}">
+                                    <label for="firstName" class="form-label">{{ __('First Name') }}</label>
+                                </div>
+                                <div class="form-group form-group-floating col-md-6 mb-3">
+                                    <input type="text" class="form-control" name="last_name" id="lastName" value="{{ Auth::user()->last_name }}">
+                                    <label for="lastName" class="form-label">{{ __('Last Name') }}</label>
+                                </div>
+                            @else
+                                <div class="form-group form-group-floating col-md-6 mb-3">
+                                    <input type="text" class="form-control" id="firstName" name="first_name" value="{{ Auth::user()->full_name }}">
+                                    <label for="firstName" class="form-label">{{ __('Name') }}</label>
+                                </div>
+                            @endif
 
                             <div class="form-group form-group-floating col-md-6 mb-3">
-                                <input type="email" class="form-control" id="email" value="{{ Auth::user()->email }}">
+                                <input type="email" class="form-control" name="email" id="email" value="{{ Auth::user()->email }}">
                                 <label for="email" class="form-label">{{ __('Email') }}</label>
                             </div>
                             <div class="form-group form-group-floating col-md-6 mb-3">
-                                <input type="phone" class="form-control" id="phone" value="{{ Auth::user()->phone }}">
+                                <input type="phone" class="form-control" name="phone" id="phone" value="{{ Auth::user()->phone }}">
                                 <label for="phone" class="form-label">{{ __('Phone') }}</label>
                             </div>
-                            <div class="form-group form-group-floating col-md-6 mb-3">
+                            {{-- <div class="form-group form-group-floating col-md-6 mb-3">
                                 <input type="text" class="form-control" id="role" value="{{ Auth::user()->role->name }}" disabled>
                                 <label for="role" class="form-label">{{ __('Role') }}</label>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>

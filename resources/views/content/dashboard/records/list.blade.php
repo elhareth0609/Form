@@ -81,32 +81,32 @@
                     </div> --}}
                     <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
                         <label for="first_name" class="form-label">{{ __('First Name') }}</label>
-                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="{{ __('First Name') }}" data-v="required" required>
+                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="{{ __('First Name') }}" >
                     </div>
 
                     <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
                         <label for="last_name" class="form-label">{{ __('Last Name') }}</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="{{ __('Last Name') }}" data-v="required" required>
+                        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="{{ __('Last Name') }}" >
                     </div>
 
                     <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
                         <label for="birth_date" class="form-label">{{ __('Birth Date') }}</label>
-                        <input type="date" class="form-control" id="birth_date" name="birth_date" data-v="required" required>
+                        <input type="date" class="form-control" id="birth_date" name="birth_date">
                     </div>
 
                     <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
                         <label for="birth_place" class="form-label">{{ __('Birth Place') }}</label>
-                        <input type="text" class="form-control" id="birth_place" name="birth_place" placeholder="{{ __('Birth Place') }}" data-v="required" required>
+                        <input type="text" class="form-control" id="birth_place" name="birth_place" placeholder="{{ __('Birth Place') }}" >
                     </div>
 
                     <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
                         <label for="employment_year" class="form-label">{{ __('Employment Year') }}</label>
-                        <input type="number" class="form-control" id="employment_year" name="employment_year" placeholder="{{ __('Employment Year') }}" min="1900" max="2099" data-v="required" required>
+                        <input type="number" class="form-control" id="employment_year" name="employment_year" placeholder="{{ __('Employment Year') }}" min="1900" max="2099" >
                     </div>
 
                     <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
                         <label for="employment_rank" class="form-label">{{ __('Employment Rank') }}</label>
-                        <input type="text" class="form-control" id="employment_rank" name="employment_rank" placeholder="{{ __('Employment Rank') }}" data-v="required" required>
+                        <input type="text" class="form-control" id="employment_rank" name="employment_rank" placeholder="{{ __('Employment Rank') }}" >
                     </div>
 
                     {{-- <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
@@ -150,36 +150,38 @@
                     </div>
                     <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
                         <label for="edit_first_name" class="form-label">{{ __('First Name') }}</label>
-                        <input type="text" class="form-control" id="edit_first_name" name="first_name" placeholder="{{ __('First Name') }}" data-v="required" required>
+                        <input type="text" class="form-control" id="edit_first_name" name="first_name" placeholder="{{ __('First Name') }}" >
                     </div>
                     <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
                         <label for="edit_last_name" class="form-label">{{ __('Last Name') }}</label>
-                        <input type="text" class="form-control" id="edit_last_name" name="last_name" placeholder="{{ __('Last Name') }}" data-v="required" required>
+                        <input type="text" class="form-control" id="edit_last_name" name="last_name" placeholder="{{ __('Last Name') }}" >
                     </div>
                     <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
                         <label for="edit_birth_date" class="form-label">{{ __('Birth Date') }}</label>
-                        <input type="date" class="form-control" id="edit_birth_date" name="birth_date" data-v="required" required>
+                        <input type="date" class="form-control" id="edit_birth_date" name="birth_date" >
                     </div>
                     <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
                         <label for="edit_birth_place" class="form-label">{{ __('Birth Place') }}</label>
-                        <input type="text" class="form-control" id="edit_birth_place" name="birth_place" placeholder="{{ __('Birth Place') }}" data-v="required" required>
+                        <input type="text" class="form-control" id="edit_birth_place" name="birth_place" placeholder="{{ __('Birth Place') }}" >
                     </div>
                     <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
                         <label for="edit_employment_year" class="form-label">{{ __('Employment Year') }}</label>
-                        <input type="number" class="form-control" id="edit_employment_year" name="employment_year" placeholder="{{ __('Employment Year') }}" min="1900" max="2099" data-v="required" required>
+                        <input type="number" class="form-control" id="edit_employment_year" name="employment_year" placeholder="{{ __('Employment Year') }}" min="1900" max="2099" >
                     </div>
                     <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
                         <label for="edit_employment_rank" class="form-label">{{ __('Employment Rank') }}</label>
-                        <input type="text" class="form-control" id="edit_employment_rank" name="employment_rank" placeholder="{{ __('Employment Rank') }}" data-v="required" required>
+                        <input type="text" class="form-control" id="edit_employment_rank" name="employment_rank" placeholder="{{ __('Employment Rank') }}" >
                     </div>
-                    {{-- <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
+                    @if (Auth::user()->hasRole('admin'))
+                    <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
                         <select class="form-select" id="edit_status" name="status" data-v="required" required>
                             <option value="accepted">{{ __('Accepted') }}</option>
                             <option value="in progress">{{ __('In Progress') }}</option>
                             <option value="rejected">{{ __('Rejected') }}</option>
                         </select>
                         <label for="status" class="form-label">{{ __('Status') }}</label>
-                    </div> --}}
+                    </div>
+                    @endif
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
                     <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Save') }}</button>
@@ -211,7 +213,8 @@
                 console.log(record);
                 $('#edit_id').val(record.id);
                 $('#edit_user_id').val(record.user_id);
-                $('#edit_name').val(record.first_name + ' ' + record.last_name);
+                $('#edit_first_name').val(record.first_name);
+                $('#edit_last_name').val(record.first_name);
                 $('#edit_code').val(record.code);
                 $('#edit_birth_date').val(record.birth_date);
                 $('#edit_birth_place').val(record.birth_place);
@@ -480,22 +483,22 @@
     });
 
 
-    new SearchableSelect({
-        selectId: 'user_id',
-        url: '/clients/all',
-        method: 'GET',
-        csrfToken: document.querySelector('meta[name="csrf-token"]').content,
-        renderOption: (option) => `
-            <div class="d-flex align-items-center">
-                <img src="${option.photo}" class="me-2" width="20" height="20">
-                <span>${option.full_name}</span>
-            </div>
-        `
-    });
+    // new SearchableSelect({
+    //     selectId: 'user_id',
+    //     url: '/clients/all',
+    //     method: 'GET',
+    //     csrfToken: document.querySelector('meta[name="csrf-token"]').content,
+    //     renderOption: (option) => `
+    //         <div class="d-flex align-items-center">
+    //             <img src="${option.photo}" class="me-2" width="20" height="20">
+    //             <span>${option.full_name}</span>
+    //         </div>
+    //     `
+    // });
 
     new SearchableSelect({
         selectId: 'edit_user_id',
-        url: '/clients/all',
+        url: '/user/all',
         method: 'GET',
         csrfToken: document.querySelector('meta[name="csrf-token"]').content,
         renderOption: (option) => `

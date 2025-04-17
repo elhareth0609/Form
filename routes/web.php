@@ -78,8 +78,10 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     Route::get('settings/account', [SettingController::class, 'get_account'])->name('settings.account.get');
+    Route::get('settings/password', [SettingController::class, 'get_password'])->name('settings.password.get');
 
     Route::post('settings/account/update', [SettingController::class, 'update_account'])->name('settings.account.update');
+    Route::post('settings/password/update', [SettingController::class, 'update_password'])->name('settings.password.update');
 
     Route::post('settings/account/upload/image', [SettingController::class, 'upload_image'])->name('settings.account.uploadImage');
 

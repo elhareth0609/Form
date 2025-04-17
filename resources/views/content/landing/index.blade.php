@@ -169,7 +169,7 @@
     footer {
         background: #333;
         color: white;
-        padding: 60px 20px 20px;
+        padding: 20px;
     }
 
     .footer-content {
@@ -207,7 +207,7 @@
     .copyright {
         text-align: center;
         padding-top: 20px;
-        border-top: 1px solid #555;
+        /* border-top: 1px solid #555; */
     }
 
 
@@ -270,32 +270,75 @@
 <!-- Navigation -->
 <nav>
     <div class="nav-container">
-        <a href="#" class="logo">AppName</a>
+        <a href="#" class="logo">Form</a>
         <button class="menu-btn" onclick="toggleMenu()">
             <span></span>
             <span></span>
             <span></span>
         </button>
         <div class="nav-links">
-            <a href="#home">Home</a>
-            <a href="#projects">Projects</a>
-            <a href="#sponsors">Sponsors</a>
-            <a href="#contact">Contact</a>
+            <a class="fw-bold" href="#home">Home</a>
+            {{-- <a href="#projects">Projects</a>
+            <a href="#sponsors">Sponsors</a> --}}
+            <a class="fw-bold" @if(Auth::check()) href="{{ route('records') }}" @else href="{{ route('auth.login') }}" @endif>@if(Auth::check()) Dashboard @else Login @endif</a>
         </div>
     </div>
 </nav>
 
+<style>
+    .app-store-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin: 40px 0;
+    }
+    
+    .app-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      background-color: white;
+      color: #333;
+      border: 2px solid #e0e0e0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .app-btn:hover {
+        transform: translateY(-5px);
+        background-color: white;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .app-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .app-icon {
+      font-size: 24px;
+    }
+  </style>
+
 <!-- Hero Section -->
 <section class="hero" id="home">
-    <h1>Welcome to AppName</h1>
+    <h1>Welcome to Form</h1>
     <p>Your ultimate solution for everything you need</p>
-    <div class="app-store-buttons">
+    {{-- <div class="app-store-buttons">
         <a href="#" target="_blank"><img src="{{ asset('assets/img/my/defaults/app.png') }}" alt="Download on App Store"></a>
         <a href="#" target="_blank"><img src="{{ asset('assets/img/my/defaults/google.png') }}" alt="Get it on Google Play"></a>
-    </div>
+    </div> --}}
+    <div class="app-store-buttons">
+        <a @if(Auth::check()) href="{{ route('records') }}" @else href="{{ route('auth.login') }}" @endif class="app-btn">
+            <div>@if(Auth::check()) Go To Dashboard @else Go To Login @endif</div>
+        </a>
+      </div>
 </section>
 
-<!-- Projects Section -->
+{{-- <!-- Projects Section -->
 <section class="projects" id="projects">
     <h2 class="section-title">Our Projects</h2>
     <div class="projects-grid">
@@ -678,9 +721,6 @@
 </section>
 
 
-
-
-
 <!-- Team Section -->
 <section class="team py-5 bg-light" id="team">
     <div class="container">
@@ -746,7 +786,7 @@
         </div>
     </div>
 </section>
-
+ --}}
 
 
 
@@ -798,7 +838,7 @@
     </div>
 </section>
 
-
+{{-- 
 
 <!-- Call to Action Section -->
 <section class="cta py-5 bg-dark text-white text-center" id="cta">
@@ -1316,36 +1356,7 @@
         </div>
     </div>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ --}}
 
 
 <!-- Contact Section -->
@@ -1390,7 +1401,7 @@
 
 <!-- Footer -->
 <footer>
-    <div class="footer-content">
+    {{-- <div class="footer-content">
         <div class="footer-section">
             <h3>About Us</h3>
             <ul class="footer-links">
@@ -1423,9 +1434,9 @@
                 <li><a href="#">Facebook</a></li>
             </ul>
         </div>
-    </div>
+    </div> --}}
     <div class="copyright">
-        <p>&copy; 2025 AppName. All rights reserved.</p>
+        <p>&copy; 2025 Form. All rights reserved.</p>
     </div>
 </footer>
 

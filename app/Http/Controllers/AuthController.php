@@ -29,16 +29,16 @@ class AuthController extends Controller {
               $credentials = $request->only('email', 'password');
               $remember = $request->has('remember');
               if (Auth::attempt($credentials,$remember)) {
-                  if (Auth::user()->hasRole('admin')) {
+                //   if (Auth::user()->hasRole('admin')) {
                       return response()->json([
                           'message' => __("Login successful"),
                       ]);
-                  } else {
-                      Auth::logout();
-                      return response()->json([
-                          'message' => __("You are not authorized to access this area."),
-                      ], 403);
-                  }
+                //   } else {
+                //       Auth::logout();
+                //       return response()->json([
+                //           'message' => __("You are not authorized to access this area."),
+                //       ], 403);
+                //   }
               } else {
                   return response()->json([
                       'message' => __("Invalid credentials"),

@@ -20,37 +20,38 @@ use Yajra\DataTables\Facades\DataTables;
 class DataTabelController extends Controller {
 
     public function users(Request $request) {
-        $users = User::all();
+        $users = User::where('role_id',2)->get();
         if ($request->ajax()) {
             return DataTables::of($users)
             ->editColumn('id', function ($user) {
                 return $user->id;
             })
-            ->editColumn('fullname', function ($user) {
+            ->addColumn('name', function ($user) {
                 return $user->fullname;
             })
             ->editColumn('email', function ($user) {
                 return $user->email;
             })
             ->editColumn('phone', function ($user) {
-                return $user->phone;
+                return $user->phone?? 'N/A';
             })
             ->editColumn('created_at', function ($user) {
                 return $user->created_at->format('Y-m-d');
             })
             ->addColumn('actions', function ($user) use ($request){
-                if ($request->has('trashed') && $request->trashed == 1) {
+                // if ($request->has('trashed') && $request->trashed == 1) {
+                //     return '
+                //         <a href="javascript:void(0)" class="btn btn-icon btn-outline-warning" onclick="restoreUser(' . $user->id . ')"><i class="mdi mdi-backup-restore"></i></a>
+                //         <a href="javascript:void(0)" class="btn btn-icon btn-outline-danger" onclick="deleteUser(' . $user->id . ')"><i class="mdi mdi-delete-forever-outline"></i></a>
+                //     ';
+                // } else {
                     return '
-                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-warning" onclick="restoreCoupon(' . $user->id . ')"><i class="mdi mdi-backup-restore"></i></a>
-                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-danger" onclick="deleteCoupon(' . $user->id . ')"><i class="mdi mdi-delete-forever-outline"></i></a>
+                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-primary" onclick="editUser(' . $user->id . ')"><i class="mdi mdi-pencil"></i></a>
+                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-danger" onclick="deleteUser(' . $user->id . ')"><i class="mdi mdi-trash-can"></i></a>
                     ';
-                } else {
-                    return '
-                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-primary" onclick="editCoupon(' . $user->id . ')"><i class="mdi mdi-pencil"></i></a>
-                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-danger" onclick="deleteCoupon(' . $user->id . ')"><i class="mdi mdi-trash-can"></i></a>
-                    ';
-                }
+                // }
             })
+            ->rawColumns(['actions'])
             ->make(true);
         }
         return view('content.dashboard.users.list');
@@ -85,10 +86,14 @@ class DataTabelController extends Controller {
             //     return $station->code;
             // })
             ->editColumn('status', function ($record) {
-                if ($record->status == 'active') {
-                    return '<span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill">'. __('Active') .'</span>';
+                if ($record->status == 'in progress') {
+                    return '<span class="badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">'. __('Process') .'</span>';
+                } else if ($record->status == 'accepted') {
+                    return '<span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill">'. __('Accepted') .'</span>';
+                } else if ($record->status == 'rejected') {
+                    return '<span class="badge bg-danger-subtle border border-danger-subtle text-danger-emphasis rounded-pill">'. __('Rejected') .'</span>';
                 } else {
-                    return '<span class="badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">'. __('In Active') .'</span>';
+                    return '<span class="badge bg-info-subtle border border-info-subtle text-info-emphasis rounded-pill">'. __('Unknown') .'</span>';
                 }
             })
             // ->addColumn('sims', function ($station) {
@@ -132,26 +137,30 @@ class DataTabelController extends Controller {
             ->editColumn('name', function ($document) {
                 return $document->name;
             })
-            // ->editColumn('file', function ($document) { // link of file
-            //     return $document->file;
-            // })
+            ->editColumn('file', function ($document) { // link of file
+                return '<a href="'. $document->documentUrl .'" class="text-primary" download><i class="mdi mdi-cloud-download-outline"></i></a>';
+            })
             ->editColumn('status', function ($document) {
-                if ($document->status == 'active') {
-                    return '<span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill">'. __('Active') .'</span>';
-                } else {
-                    return '<span class="badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">'. __('In Active') .'</span>';
+                if (Auth::user()->hasRole('admin')) {
+                    if ($document->status == 'active') {
+                        return '<span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill">'. __('Active') .'</span>';
+                    } else {
+                        return '<span class="badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill">'. __('In Active') .'</span>';
+                    }
                 }
             })
             ->editColumn('created_at', function ($document) {
                 return $document->created_at->format('Y-m-d');
             })
             ->addColumn('actions', function ($document) use ($request) {
+                if (Auth::user()->hasRole('admin')) {
                     return '
-                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-primary" onclick="editDocument(' . $document->id . ')"><i class="mdi mdi-pencil"></i></a>
-                        <a href="javascript:void(0)" class="btn btn-icon btn-outline-danger" onclick="deleteDocument(' . $document->id . ')"><i class="mdi mdi-trash-can"></i></a>
+                    <a href="javascript:void(0)" class="btn btn-icon btn-outline-primary" onclick="editDocument(' . $document->id . ')"><i class="mdi mdi-pencil"></i></a>
+                    <a href="javascript:void(0)" class="btn btn-icon btn-outline-danger" onclick="deleteDocument(' . $document->id . ')"><i class="mdi mdi-trash-can"></i></a>
                     ';
+                }
             })
-            ->rawColumns(['status','actions'])
+            ->rawColumns(['status','actions','file'])
             ->with('ids', $ids)
             ->make(true);
         }
@@ -177,8 +186,8 @@ class DataTabelController extends Controller {
             ->editColumn('id', function ($transaction) {
                 return (string) $transaction->id;
             })
-            ->editColumn('name', function ($transaction) {
-                return $transaction->name;
+            ->editColumn('user_id', function ($transaction) {
+                return $transaction->user? $transaction->user->full_name : 'N/A';
             })
             ->editColumn('amount', function ($transaction) {
                 return $transaction->amount;

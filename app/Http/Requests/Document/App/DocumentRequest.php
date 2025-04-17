@@ -7,8 +7,8 @@ use Illuminate\Foundation\Http\FormRequest;
 class DocumentRequest extends FormRequest {
     public function rules() {
         return [
-            'id' => $this->isMethod('PUT') ? 'required|exists:documents' : '',
-            'file' => 'required|file',
+            'id' => $this->routeIs('document.update') ? 'required|exists:documents' : '',
+            'file' => $this->routeIs('document.create') ? 'required|file' : 'nullable|file',
             'name' => 'required|string',
             'status' => 'required|in:active,inactive',
         ];

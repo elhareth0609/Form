@@ -14,10 +14,14 @@ class SettingController extends Controller {
         return view('content.dashboard.settings.account');
     }
 
+    public function get_password() {
+        return view('content.dashboard.settings.password');
+    }
+
     public function update_account(Request $request) {
         $validator = Validator::make(request()->all(), [
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'first_name' => Auth::user()->hasRole('admin') ? 'required' : 'required',
+            'last_name' => Auth::user()->hasRole('admin') ? 'required' : 'sometimes',
             'email' => 'required|email',
             'phone' => 'required',
         ]);
@@ -33,9 +37,42 @@ class SettingController extends Controller {
         try {
             $user = User::find(Auth::user()->id);
             $user->first_name = $request->first_name;
-            $user->last_name = $request->last_name;
+            $user->last_name = $request->last_name?? $user->last_name;
             $user->email = $request->email;
             $user->phone = $request->phone;
+            $user->save();
+
+            return response()->json([
+                'icon' => 'success',
+                'state' => __("Success"),
+                'message' => __("Updated Successfully.")
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'icon' => 'error',
+                'state' => __("Error"),
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function update_password(Request $request) {
+        $validator = Validator::make(request()->all(), [
+            'password' => 'required|string|min:8',
+            'confirm_password' => 'required_with:password|same:password',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'icon' => 'error',
+                'state' => __("Error"),
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        try {
+            $user = User::find(Auth::user()->id);
+            $user->password = $request->password;
             $user->save();
 
             return response()->json([

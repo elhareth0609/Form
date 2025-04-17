@@ -8,5 +8,6 @@ interface UserRepositoryInterface {
     public function update($id, array $data);
     public function delete($id);
     // public function actived();
-    // public function all();
+    public function all();
+    public function where($column, $value);
 }

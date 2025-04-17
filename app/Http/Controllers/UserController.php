@@ -25,6 +25,15 @@ class UserController extends Controller {
         }
     }
 
+    public function all() {
+        try {
+            $allUser = $this->userService->allUser();
+            return $this->success(UserResource::collection($allUser));
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
+    }
+
     public function create(UserRequest $request) {
         try {
             $car = $this->userService->createUser($request->validated());

@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', __('Clients'))
+@section('title', __('Users'))
 
 @section('content')
 
-<h1 class="h3 mb-4 text-gray-800" dir="{{ app()->getLocale() == "ar" ? "rtl" : "" }}">{{ __('Clients') }}</h1>
+<h1 class="h3 mb-4 text-gray-800" dir="{{ app()->getLocale() == "ar" ? "rtl" : "" }}">{{ __('Users') }}</h1>
 
 <div class="card p-2" dir="{{ app()->getLocale() == "ar" ? "rtl" : "" }}">
     <div class="container-fluid mt-5">
@@ -12,11 +12,9 @@
             <input type="text" class="form-control my-w-fit-content m-1" id="dataTables_my_filter" placeholder="{{ __('Search ...') }}" name="search">
 
             <select class="form-select my-w-fit-content m-1" id="selectType" name="type">
-                <option value="all">{{ __('All') }}</option>
-                {{-- <option value="staff">{{ __('Staffs') }}</option>
-                <option value="admin">{{ __('Admins') }}</option>
-                <option value="driver">{{ __('Drivers') }}</option>
-                <option value="client">{{ __('Clients') }}</option> --}}
+                <option value="">{{ __('All') }}</option>
+                <option value="active">{{ __('Active') }}</option>
+                <option value="inactive">{{ __('In Active') }}</option>
             </select>
 
             <select class="form-select my-w-fit-content m-1" id="dataTables_my_length" name="length">
@@ -26,10 +24,7 @@
                 <option value="100">100</option>
             </select>
 
-            <button class="btn btn-icon btn-outline-primary m-1" id="" data-bs-toggle="modal" data-bs-target="#createClientModal"><span class="mdi mdi-plus-outline"></span></button>
-            <button class="btn btn-icon btn-outline-primary m-1" id="" data-bs-toggle="modal" data-bs-target="#uploadClientModal"><span class="mdi mdi-upload-outline"></span></button>
-            <button class="btn btn-icon btn-outline-primary m-1" id=""><span class="mdi mdi-download-outline"></span></button>
-            <button class="btn btn-icon btn-outline-danger m-1" id="trash-button" data-trashed="0"><span class="mdi mdi-delete-alert-outline"></span></button>
+            <button class="btn btn-icon btn-outline-primary m-1" id="" data-bs-toggle="modal" data-bs-target="#createUserModal"><span class="mdi mdi-plus-outline"></span></button>
 
             <div class="dropdown my-w-fit-content px-0">
                 <button class="btn btn-icon btn-outline-primary m-1" type="button" data-bs-toggle="dropdown">
@@ -44,11 +39,10 @@
                 <thead>
                     <tr>
                         <th><input class="form-check-input" type="checkbox" id="check-all"></th>
-                        <th>{{__("Code")}}</th>
-                        <th>{{ __('Discount') }}</th>
-                        <th>{{ __('Max') }}</th>
-                        <th>{{ __('Status') }}</th>
-                        <th>{{ __('Expired At') }}</th>
+                        <th>{{__("Id")}}</th>
+                        <th>{{__("Name")}}</th>
+                        <th>{{__("Email")}}</th>
+                        <th>{{__("Phone")}}</th>
                         <th>{{ __('Created At') }}</th>
                         <th>{{ __('Actions') }}</th>
                     </tr>
@@ -62,91 +56,36 @@
     </div>
 </div>
 
-
-<!-- Edit Client Modal -->
-<div class="modal fade" id="editClientModal" tabindex="-1" aria-labelledby="editClientLabel" aria-hidden="true">
+<!-- Create User Modal -->
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form class="validate" id="editClientForm" action="{{route('client.update')}}" method="POST">
-            <div class="modal-content">
+        <form id="createUserForm" action="{{route('user.create')}}" method="POST">
+            <div class="modal-content" dir="{{ app()->isLocale('ar') ? 'rtl' : '' }}">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editClientLabel">{{ __('Edit Client') }}</h5>
-                    <button type="button" class="btn btn-light btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="createUserLabel">{{ __('Create User') }}</h5>
+                    <button type="button" class="btn btn-light btn-close {{ app()->isLocale('ar') ? 'ms-0 me-auto' : '' }}" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     @csrf
-                    <input type="hidden" id="pid" name="pid" required>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="{{ __('Code') }}" id="pcode" name="pcode" data-v="required" aria-label="{{ __('Code') }}" aria-describedby="button-addon2" disabled required>
-                        <button class="btn btn-light border generate-code" type="button">{{ __('Generate') }}</button>
+                    <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
+                        <label for="first_name" class="form-label">{{ __('Name') }}</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="{{ __('Name') }}" data-v="required" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="puses" class="form-label">{{ __('Max') }}</label>
-                        <input type="text" class="form-control" id="puses" name="puses" data-v="required" required>
+                    <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
+                        <label for="email" class="form-label">{{ __('Email') }}</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="{{ __('Email') }}" data-v="required" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="pdiscount" class="form-label">{{ __('Discount') }}</label>
-                        <input type="text" class="form-control" id="pdiscount" name="pdiscount" data-v="required" required>
+                    <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
+                        <label for="phone" class="form-label">{{ __('Phone') }}</label>
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="{{ __('Phone') }}" data-v="required" required>
                     </div>
-                    <div class="form-group mb-3">
-                        <label for="pexpired_date" class="form-label">{{ __('Expired At') }}</label>
-                        <input type="datetime-local" class="form-control" id="pexpired_date" name="pexpired_date" data-v="required" required>
+                    <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
+                        <label for="password" class="form-label">{{ __('Password') }}</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="{{ __('Password') }}">
                     </div>
-                    <div class="mb-3">
-                        <label for="pstatus" class="form-label">{{ __('Status') }}</label>
-                        <select class="form-select" id="pstatus" name="pstatus" data-v="required" required>
-                            <option value="1">{{ __('Active') }}</option>
-                            <option value="0">{{ __('Inactive') }}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
-                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Save') }}</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Create Client Modal -->
-<div class="modal fade" id="createClientModal" tabindex="-1" aria-labelledby="createClientLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form class="validate" id="createClientForm" action="{{route('client.create')}}" method="POST">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createClientLabel">{{ __('Create Client') }}</h5>
-                    <button type="button" class="btn btn-light btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    @csrf
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="{{ __('Code') }}" id="code" name="code" data-v="required" aria-label="{{ __('Code') }}" aria-describedby="button-addon2" readonly>
-                        <button class="btn btn-icon border copy-code" type="button" data-clipboard-target="#code" >
-                            <span class="my my-copy"></span>
-                            <span class="my my-doubletick d-none"></span>
-                        </button>
-                        <button class="btn btn-light border generate-code" type="button">{{ __('Generate') }}</button>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span for="max" class="input-group-text">{{ __('Max') }}</span>
-                        <input type="number" class="form-control" name="max" data-v="required" required>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span for="discount" class="input-group-text">{{ __('Discount') }}</span>
-                        <input type="number" class="form-control" name="discount" data-v="required" required>
-                        <span class="input-group-text">%</span>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="expired_date" class="form-label">{{ __('Expired At') }}</label>
-                        <input type="datetime-local" class="form-control" name="expired_date" data-v="required" required>
-                    </div>
-                    <div class="input-group mb-3">
-                        <label class="input-group-text" for="status">{{ __('Status') }}</label>
-                        <select class="form-select" name="status" data-v="required" required>
-                            <option selected="0">{{ __('Select Status') }}</option>
-                            <option value="active">{{ __('Active') }}</option>
-                            <option value="inactive">{{ __('Inactive') }}</option>
-                        </select>
+                    <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
+                        <label for="confirm_password" class="form-label">{{ __('Confirm Password') }}</label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="{{ __('Confirm Password') }}">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -158,134 +97,48 @@
     </div>
 </div>
 
-<!-- Print Client Image Modal -->
-<div class="modal fade" id="printClientModal" tabindex="-1" aria-labelledby="printClientLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="printClientLabel">{{ __('Print Client') }}</h5>
-                <button type="button" class="btn btn-light btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12 col-lg-6 d-flex justify-content-center mb-4">
-                        <div class="printimage-container" id="printedImage">
-                            <img src="{{ asset('assets/img/my/defaults/print.png') }}" width="800px" alt="print">
-                            <div class="text-overlay identifier"></div> <!-- المعرف -->
-                            <div class="text-overlay code"></div> <!-- الكود -->
-                            <div class="text-overlay usage"></div> <!-- الإستعمالات -->
-                            <div class="text-overlay validity"></div> <!-- الصلاحية -->
-                            <div class="text-overlay discount"></div> <!-- الخصم -->
-                            <div class="text-overlay status"></div> <!-- الحالة -->
-                            <div class="text-overlay limit"></div> <!-- الحد الأقصى -->
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-lg-6">
-                        <div class="mb-3">
-                            <label for="pcode" class="form-label">{{ __('Code') }}</label>
-                            <input type="text" class="form-control" id="pcode" name="pcode" data-v="required" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="puses" class="form-label">{{ __('Max') }}</label>
-                            <input type="text" class="form-control" id="puses" name="puses" data-v="required" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="pdiscount" class="form-label">{{ __('Discount') }}</label>
-                            <input type="text" class="form-control" id="pdiscount" name="pdiscount" data-v="required" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="pexpired_date" class="form-label">{{ __('Expired At') }}</label>
-                            <input type="datetime-local" class="form-control" id="pexpired_date" name="pexpired_date" data-v="required" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="pstatus" class="form-label">{{ __('Status') }}</label>
-                            <select class="form-select" id="pstatus" name="pstatus" data-v="required" required>
-                                <option value="1">{{ __('Active') }}</option>
-                                <option value="0">{{ __('Inactive') }}</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
-                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Print') }}</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Print Client Pdf Modal -->
-<div class="modal fade" id="printClientPdfModal" tabindex="-1" aria-labelledby="printClientPdfLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="printClientPdfLabel">{{ __('Print Client Pdf') }}</h5>
-                <button type="button" class="btn btn-light btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12 col-lg-6 d-flex justify-content-center mb-4">
-                        <iframe id="pdfPreview" style="width: 100%; height: 600px;" frameborder="0"></iframe>
-                    </div>
-                    <!-- Existing form content on the right side -->
-                    <div class="col-md-12 col-lg-6">
-                        <input type="hidden" class="form-control" id="pdid" name="pdid" data-v="required" required>
-                        <div class="mb-3">
-                            <label for="pdcode" class="form-label">{{ __('Code') }}</label>
-                            <input type="text" class="form-control" id="pdcode" name="pdcode" data-v="required" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="pduses" class="form-label">{{ __('Max') }}</label>
-                            <input type="text" class="form-control" id="pduses" name="pduses" data-v="required" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="pddiscount" class="form-label">{{ __('Discount') }}</label>
-                            <input type="text" class="form-control" id="pddiscount" name="pddiscount" data-v="required" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="pdexpired_date" class="form-label">{{ __('Expired At') }}</label>
-                            <input type="datetime-local" class="form-control" id="pdexpired_date" name="pdexpired_date" data-v="required" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="pdstatus" class="form-label">{{ __('Status') }}</label>
-                            <select class="form-select" id="pdstatus" name="pdstatus" data-v="required" required>
-                                <option value="1">{{ __('Active') }}</option>
-                                <option value="0">{{ __('Inactive') }}</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
-                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Print') }}</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Upload Client Modal -->
-<div class="modal fade" id="uploadClientModal" tabindex="-1" aria-labelledby="uploadClientLabel" aria-hidden="true">
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form id="printClientForm"  method="POST">
-            <div class="modal-content">
+        <form id="editUserForm" method="POST">
+            <div class="modal-content" dir="{{ app()->isLocale('ar') ? 'rtl' : '' }}">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="printClientLabel">{{ __('Upload Client') }}</h5>
-                    <button type="button" class="btn btn-light btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="editUserLabel">{{ __('Edit User') }}</h5>
+                    <button type="button" class="btn btn-light btn-close {{ app()->isLocale('ar') ? 'ms-0 me-auto' : '' }}" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="dropzone" class="dropzone"></div>
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" id="edit_id" name="id" required>
+                    <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
+                        <label for="edit_first_name" class="form-label">{{ __('Name') }}</label>
+                        <input type="text" class="form-control" id="edit_first_name" name="first_name" placeholder="{{ __('Name') }}" data-v="required" required>
+                    </div>
+                    <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
+                        <label for="edit_email" class="form-label">{{ __('Email') }}</label>
+                        <input type="email" class="form-control" id="edit_email" name="email" placeholder="{{ __('Email') }}" data-v="required" required>
+                    </div>
+                    <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
+                        <label for="edit_phone" class="form-label">{{ __('Phone') }}</label>
+                        <input type="number" class="form-control" id="edit_phone" name="phone" placeholder="{{ __('Phone') }}" data-v="required" required>
+                    </div>
+                    {{-- <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
+                        <label for="edit_password" class="form-label">{{ __('Password') }}</label>
+                        <input type="password" class="form-control" id="edit_password" name="password" placeholder="{{ __('Password') }}">
+                    </div>
+                    <div class="form-group form-group-floating {{ app()->getLocale() == "ar" ? "input-rtl" : "" }} mb-3">
+                        <label for="edit_confirm_password" class="form-label">{{ __('Confirm Password') }}</label>
+                        <input type="password" class="form-control" id="edit_confirm_password" name="confirm_password" placeholder="{{ __('Confirm Password') }}">
+                    </div> --}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
-                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Upload') }}</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Save') }}</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
-
 
 <script type="text/javascript">
         var table;
@@ -295,212 +148,25 @@
         let isCheckAllTrigger = false;
         // End of checkboxes
 
-
-        Pusher.logToConsole = true;
-        var pusher = new Pusher('f513c6dba43174cbee4d', {
-            cluster: 'eu'
-        });
-
-        function updateOverlay() {
-            document.querySelector('.text-overlay.identifier').innerText = document.getElementById('pid').value || '';
-            document.querySelector('.text-overlay.code').innerText = document.getElementById('pcode').value || '';
-            document.querySelector('.text-overlay.usage').innerText = document.getElementById('puses').value || '';
-            document.querySelector('.text-overlay.discount').innerText = document.getElementById('pdiscount').value + '%' || '';
-            const datetimeValue = document.getElementById('pexpired_date').value;
-            const dateValue = datetimeValue ? datetimeValue.split('T')[0] : '';
-            document.querySelector('.text-overlay.validity').innerText = dateValue || '';
-            document.querySelector('.text-overlay.status').innerText = document.getElementById('pstatus').value || '';
-            document.querySelector('.text-overlay.limit').innerText = document.getElementById('puses').value || '';
-        }
-
-        function updatePdfOverlay() {
-            $('#loading').show();
-
-            const id = document.getElementById('pdid').value || '';
-            const code = document.getElementById('pdcode').value || '';
-            const uses = document.getElementById('pduses').value || '';
-            const discount = document.getElementById('pddiscount').value || '';
-            const expired_date = document.getElementById('pdexpired_date').value || '';
-            const status = document.getElementById('pdstatus').value || '';
-
-            $.ajax({
-                url: '/client/pdf/' + id,
-                type: 'POST',
-                xhrFields: {
-                    responseType: 'blob' // Important to get the binary data
-                },
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                data: {
-                    code: code,
-                    uses: uses,
-                    discount: discount,
-                    expired_date: expired_date,
-                    status: status,
-                },
-                success: function(blob) {
-                    $('#loading').hide();
-
-                    // Create an object URL from the blob
-                    const url = URL.createObjectURL(blob);
-                    // Set the source of the iframe or embed to display the PDF
-                    $('#pdfPreview').attr('src', url);
-                    // $('#printClientPdfModal').modal('show');
-
-                    // Release the URL when the modal is closed
-                    $('#printClientPdfModal').on('hidden.bs.modal', function () {
-                        URL.revokeObjectURL(url);
-                        $('#pdfPreview').attr('src', ''); // Clear the src to release memory
-                    });
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    const response = JSON.parse(xhr.responseText);
-                    $('#loading').hide();
-                    Swal.fire({
-                        icon: response.icon,
-                        title: response.state,
-                        text: response.message,
-                        confirmButtonText: __("Ok", lang)
-                    });
-                }
-            });
-        }
-
-        document.getElementById('pid').addEventListener('input', updateOverlay);
-        document.getElementById('pcode').addEventListener('input', updateOverlay);
-        document.getElementById('puses').addEventListener('input', updateOverlay);
-        document.getElementById('pdiscount').addEventListener('input', updateOverlay);
-        document.getElementById('pexpired_date').addEventListener('input', updateOverlay);
-        document.getElementById('pstatus').addEventListener('change', updateOverlay);
-
-        document.getElementById('pdcode').addEventListener('input', updatePdfOverlay);
-        document.getElementById('pduses').addEventListener('input', updatePdfOverlay);
-        document.getElementById('pddiscount').addEventListener('input', updatePdfOverlay);
-        document.getElementById('pdexpired_date').addEventListener('input', updatePdfOverlay);
-        document.getElementById('pdstatus').addEventListener('change', updatePdfOverlay);
-
-
-        function printImage() {
-            const printedImageElement = document.querySelector(".printimage-container");
-
-            html2canvas(printedImageElement, {
-              // allowTaint: true,
-                useCORS: true
-            }).then(function(canvas) {
-                const imgData = canvas.toDataURL('image/png');
-                const newWindow = window.open('', '_blank');
-                newWindow.document.write(`<img src="${imgData}" onload="window.print();">`);
-                newWindow.document.close();  // Ensure the window is fully loaded before printing
-                newWindow.focus();  // Bring the new window to the front
-            });
-        }
-
-        function printClient(id) {
+        function editUser(id) {
             $('#loading').show();
 
             $.ajax({
-                url: '/client/' + id,
+                url: '/user/' + id,
                 type: 'GET',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken
                 },
-                success: function(data) {
-                client = data.client;
-                $('#pid').val(client.id);
-                $('#pcode').val(client.code);
-                $('#puses').val(client.max);
-                $('#pdiscount').val(client.discount);
-                $('#pexpired_date').val(client.expired_date.replace(' ', 'T'));
-                $('#pstatus').val(client.status);
-                updateOverlay();
+                success: function(response) {
+                user = response.data;
+                console.log(user);
+                $('#edit_id').val(user.id);
+                $('#edit_first_name').val(user.full_name);
+                $('#edit_phone').val(user.phone);
+                $('#edit_email').val(user.email);
 
                 $('#loading').hide();
-                $('#printClientModal').modal('show');
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    const response = JSON.parse(xhr.responseText);
-                    $('#loading').hide();
-                    Swal.fire({
-                        icon: response.icon,
-                        title: response.state,
-                        text: response.message,
-                        confirmButtonText: __("Ok",lang)
-                    });
-                }
-            });
-        }
-
-        function printPdfClient(id) {
-            $('#loading').show();
-            $.ajax({
-                url: '/client/pdf/' + id,
-                type: 'POST',
-                xhrFields: {
-                    responseType: 'blob' // Important to get the binary data
-                },
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                success: function(blob,data) {
-                    $('#loading').hide();
-
-                    client = data.client;
-                    if (client) {
-
-                        $('#pdid').val(client.id);
-                        $('#pdcode').val(client.code);
-                        $('#pduses').val(client.max);
-                        $('#pddiscount').val(client.discount);
-                        $('#pdexpired_date').val(client.expired_date.replace(' ', 'T'));
-                        $('#pdstatus').val(client.status);
-                    }
-
-                    // Create an object URL from the blob
-                    const url = URL.createObjectURL(blob);
-                    // Set the source of the iframe or embed to display the PDF
-                    $('#pdfPreview').attr('src', url);
-                    $('#printClientPdfModal').modal('show');
-
-                    // Release the URL when the modal is closed
-                    $('#printClientPdfModal').on('hidden.bs.modal', function () {
-                        URL.revokeObjectURL(url);
-                        $('#pdfPreview').attr('src', ''); // Clear the src to release memory
-                    });
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    const response = JSON.parse(xhr.responseText);
-                    $('#loading').hide();
-                    Swal.fire({
-                        icon: response.icon,
-                        title: response.state,
-                        text: response.message,
-                        confirmButtonText: __("Ok", lang)
-                    });
-                }
-            });
-        }
-
-        function editClient(id) {
-            $('#loading').show();
-
-            $.ajax({
-                url: '/client/' + id,
-                type: 'GET',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                success: function(data) {
-                client = data.client;
-                $('#id').val(client.id);
-                $('#code').val(client.code);
-                $('#uses').val(client.max);
-                $('#discount').val(client.discount);
-                $('#expired_date').val(client.expired_date.replace(' ', 'T'));
-                $('#status').val(client.status);
-
-                $('#loading').hide();
-                $('#editClientModal').modal('show');
+                $('#editUserModal').modal('show');
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     const response = JSON.parse(xhr.responseText);
@@ -516,36 +182,28 @@
 
         }
 
-        function deleteClient(id) {
+        function deleteUser(id) {
             confirmDelete({
                 id: id,
-                url: '/client',
+                url: '/user',
                 table: table
             });
         }
 
-        function restoreClient(id) {
+        function restoreUser(id) {
             confirmRestore({
                 id: id,
-                url: '/client',
+                url: '/user',
                 table: table
             });
         }
-
-        // function demoProduct(id) {
-        //     window.open("{{ url('view/product') }}/" + id, "_blank");
-        // }
-
-        // function editClient(id) {
-        //     window.open("{{ url('view/product') }}/" + id);
-        // }
 
         function showContextMenu(id, x, y) {
 
             var contextMenu = $('<ul class="context-menu" dir="{{ app()->isLocale("ar") ? "rtl" : "" }}"></ul>')
-                .append('<li><a onclick="editClient(' + id + ')"><i class="tf-icons mdi mdi-pencil-outline {{ app()->isLocale("ar") ? "ms-1" : "me-1" }}"></i>{{ __("Edit") }}</a></li>')
+                .append('<li><a onclick="editUser(' + id + ')"><i class="tf-icons mdi mdi-pencil-outline {{ app()->isLocale("ar") ? "ms-1" : "me-1" }}"></i>{{ __("Edit") }}</a></li>')
                 .append('<li class="px-0 pe-none"><div class="divider border-top my-0"></div></li>')
-                .append('<li><a onclick="deleteClient(' + id + ')"><i class="tf-icons mdi mdi-trash-can-outline {{ app()->isLocale("ar") ? "ms-1" : "me-1" }}"></i>{{ __("Delete") }}</a></li>');
+                .append('<li><a onclick="deleteUser(' + id + ')"><i class="tf-icons mdi mdi-trash-can-outline {{ app()->isLocale("ar") ? "ms-1" : "me-1" }}"></i>{{ __("Delete") }}</a></li>');
 
 
             contextMenu.css({
@@ -561,50 +219,18 @@
                 });
         }
 
-    Dropzone.autoDiscover = false;
-    var myDropzone = new Dropzone("#dropzone", {
-        url: "{{ route('clients.import') }}",
-        autoProcessQueue: false,
-        acceptedFiles: '.xlsx,.xls',
-        maxFilesize: 150, // Max file size in MB
-        maxFiles: 1, // Allow only one file
-        addRemoveLinks: true,
-        parallelUploads: 1, // Only one upload at a time
-        dictDefaultMessage: "{{ __('Drag and drop Excel files here or click to upload') }}",
-        dictMaxFilesExceeded: "{{ __('You can only upload one file.') }}", // Error message when max files exceeded
-        headers: {
-            'X-CSRF-TOKEN': csrfToken
-        }
-    });
-
-    // Optional: remove the previous file when a new one is added
-    myDropzone.on("addedfile", function() {
-        if (this.files.length > 1) {
-            this.removeFile(this.files[0]); // Remove the first file to keep only the latest one
-        }
-    });
-
-    myDropzone.on("success", function(file, response) {
-    table.ajax.reload();
-    });
-
-    myDropzone.on("error", function(file, errorMessage) {
-        console.error('Error uploading file:', errorMessage);
-    });
 
     $(document).ready(function() {
-        // $.noConflict();
             table = $('#table').DataTable({
                 pageLength: 100,
                 language: {
                     "emptyTable": "<div id='no-data-animation' style='width: 100%; height: 200px;'></div>",
-                    "zeroRecords": "<div id='no-data-animation' style='width: 100%; height: 200px;'></div>"
+                    "zeroUsers": "<div id='no-data-animation' style='width: 100%; height: 200px;'></div>"
                 },
                 ajax: {
-                    url: "{{ route('datatabels') }}",
+                    url: "{{ route('users') }}",
                     data: function(d) {
                         d.type = $('#selectType').val();
-                        d.trashed = $('#trash-button').data('trashed');
                     },
                     // Start of checkboxes
                     dataSrc: function(response) {
@@ -626,24 +252,20 @@
                         }
                     },
                     // End  of checkboxes
-                    {data: 'code', name: '{{__("Code")}}',},
-                    {data: 'discount', name: '{{__("Discount")}}',},
-                    {data: 'max', name: '{{__("Max")}}',},
-                    {data: 'status', name: '{{__("Status")}}',},
-                    {data: 'expired_date', name: '{{__("Expired At")}}',},
-                    {data: 'created_at', name: '{{__("Created At")}}',},
-                    {data: 'actions', name: '{{__("Actions")}}', orderable: false, searchable: false,}
+                    {data: 'id', name: '{{__("Id")}}',},
+                    {data: 'name', name: '{{__("Name")}}'},
+                    {data: 'email', name: '{{__("Email")}}'},
+                    {data: 'phone', name: '{{__("Phone")}}'},
+                    {data: 'created_at', name: '{{__("Created At")}}'},
+                    {data: 'actions', name: '{{__("Actions")}}', orderable: false, searchable: false}
                 ],
-                order: [[6, 'desc']], // Default order by created_at column
+                order: [[5, 'desc']], // Default order by created_at column
 
-                // Start of checkboxes
-
-                // End of checkboxes
                 rowCallback: function(row, data) {
-                    $(row).attr('id', 'client_' + data.id);
+                    $(row).attr('id', 'user_' + data.id);
 
                     // $(row).on('dblclick', function() {
-                    //     window.location.href = "{{ url('client') }}/" + data.id;
+                    //     window.location.href = "{{ url('user') }}/" + data.id;
                     // });
 
                     $(row).on('contextmenu', function(e) {
@@ -653,154 +275,15 @@
 
                     // Start of checkboxes
                     var $checkbox = $(row).find('.check-item');
-                    var clientId = parseInt($checkbox.val());
+                    var userId = parseInt($checkbox.val());
 
-                    if (selectedIds.includes(clientId)) {
+                    if (selectedIds.includes(userId)) {
                         $checkbox.prop('checked', true);
                     } else {
                         $checkbox.prop('checked', false);
                     }
                     // End of checkboxes
 
-                    $(row).find('td').eq(1).on('dblclick', function() {
-
-                        var cell = $(this);
-
-                        if (cell.find('input').length > 0) {
-                            return; // Exit if already in edit mode
-                        }
-
-                        var originalValue = cell.text();
-                        var input = $('<input>', {
-                            type: 'text',
-                            value: originalValue,
-                            class: 'form-control',
-                            'data-id': data.id
-                        }).css('width', '100%');
-
-                        cell.html(input);
-
-                        input.focus();
-
-                        // Handle Enter key or focus loss
-                        input.on('keypress blur', function(e) {
-                            if (e.type === 'keypress' && e.which !== 13) {
-                                return;
-                            }
-
-                            var newValue = $(this).val();
-
-                            // Only proceed if the value has changed
-                            if (newValue !== originalValue) {
-                                $.ajax({
-                                    url: '/client/' + data.id + '/update/code',  // Update with your actual route
-                                    type: 'POST',
-                                    headers: {
-                                        'X-CSRF-TOKEN': csrfToken
-                                    },
-                                    data: { code: newValue },
-                                    success: function(response) {
-                                        cell.text(newValue);
-                                        // show badge success message
-                                        // Swal.fire({
-                                        //     icon: response.icon,
-                                        //     title: response.state,
-                                        //     text: response.message,
-                                        //     confirmButtonText: __("Ok", lang),
-                                        // });
-                                    },
-                                    error: function(xhr) {
-                                        // show badge error message
-                                        const response = JSON.parse(xhr.responseText);
-                                        // Swal.fire({
-                                        //     icon: response.icon,
-                                        //     title: response.state,
-                                        //     text: response.message,
-                                        //     confirmButtonText: __("Ok", lang),
-                                        // });
-                                        cell.text(originalValue); // revert back on error
-                                    }
-                                });
-                            } else {
-                                cell.text(originalValue);
-                            }
-                        });
-                    });
-
-                    $(row).find('td').eq(4).on('dblclick', function() {
-
-                        var cell = $(this);
-
-                        if (cell.find('select').length > 0) {
-                            return; // Exit if already in edit mode
-                        }
-
-                        var originalValue = cell.text();
-                        // Create a select element and add options
-                        var select = $('<select>', {
-                            class: 'form-control',
-                            'data-id': data.id
-                        }).css('width', '100%');
-
-                        // Add options to the select dropdown
-                        var options = [
-                            { value: 'active', text: 'Active' },
-                            { value: 'inactive', text: 'In Active' }
-                        ];
-
-                        // Append each option to the select element
-                        options.forEach(function(option) {
-                            select.append($('<option>', {
-                                value: option.value,
-                                text: option.text,
-                                selected: option.text === originalValue // Select the option if it matches the original value
-                            }));
-                        });
-
-                        cell.html(select);
-                        select.focus();
-
-                        // Handle the select change or blur event
-                        select.on('change blur', function(e) {
-                            var newValue = $(this).val();
-                            var newText = $(this).find('option:selected').text();
-
-                            // Only proceed if the value has changed
-                            if (newText !== originalValue) {
-                                $.ajax({
-                                    url: '/client/' + data.id + '/update/status',  // Update with your actual route
-                                    type: 'POST',
-                                    headers: {
-                                        'X-CSRF-TOKEN': csrfToken
-                                    },
-                                    data: { status: newValue },
-                                    success: function(response) {
-                                        cell.text(newValue);
-                                        // show badge success message
-                                        // Swal.fire({
-                                        //     icon: response.icon,
-                                        //     title: response.state,
-                                        //     text: response.message,
-                                        //     confirmButtonText: __("Ok", lang),
-                                        // });
-                                    },
-                                    error: function(xhr) {
-                                        // show badge error message
-                                        const response = JSON.parse(xhr.responseText);
-                                        // Swal.fire({
-                                        //     icon: response.icon,
-                                        //     title: response.state,
-                                        //     text: response.message,
-                                        //     confirmButtonText: __("Ok", lang),
-                                        // });
-                                        cell.text(originalValue); // revert back on error
-                                    }
-                                });
-                            } else {
-                                cell.text(originalValue);
-                            }
-                        });
-                    });
                 },
                 drawCallback: function() {
                   // Start of checkboxes
@@ -858,14 +341,15 @@
                 updateInfoText(table);
             });
 
-            $('#createClientForm').submit(function(event) {
+            $('#createUserForm').submit(function(event) {
                 event.preventDefault();
-                $('#createClientModal').modal('hide');
+                $('#createUserModal').modal('hide');
 
                 if (!$(this).valid()) {
-                    $('#createClientModal').modal('show');
+                    $('#createUserModal').modal('show');
                     return;
                 }
+
                 $('#loading').show();
 
                 var formData = $(this).serialize();
@@ -884,9 +368,9 @@
                             text: response.message,
                             confirmButtonText: __("Ok",lang)
                         });
-                        $('#createClientForm')[0].reset();
-                        $('#createClientForm .form-control').removeClass('valid');
-                        $('#createClientForm .form-select').removeClass('valid');
+                        $('#createUserForm')[0].reset();
+                        $('#createUserForm .form-control').removeClass('valid');
+                        $('#createUserForm .form-select').removeClass('valid');
                         table.ajax.reload();
                     },
                     error: function(xhr, textStatus, errorThrown) {
@@ -902,13 +386,15 @@
                 });
             });
 
-            $('#editClientForm').submit(function(event) {
+            $('#editUserForm').submit(function(event) {
                 event.preventDefault();
 
                 var formData = $(this).serialize();
+                var id = $('#edit_id').val();
+                console.log(id);
 
                 $.ajax({
-                    url: $(this).attr('action'),
+                    url: "{{ route('user.update', ':id') }}".replace(':id', id),
                     type: $(this).attr('method'),
                     data: formData,
                     dataType: 'json',
@@ -933,70 +419,36 @@
                 });
             });
 
-            $('#uploadClientForm').click(function(event) {
-                if (myDropzone.getQueuedFiles().length > 0) {
-                    myDropzone.processQueue();
-                } else {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: __("Error",lang),
-                        text: __("No files to upload",lang),
-                        confirmButtonText: __("Ok",lang)
-                    });
-                }
-            });
-
-            $('.generate-code').click(function(event) {
-                event.preventDefault(); // Prevent default button behavior
-
-                $.ajax({
-                    url: "{{ route('clients.generate') }}",
-                    type: 'GET',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    success: function(response) {
-                        if (response.code) {
-                            $('#code').val(response.code);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error generating code:', error);
-                    }
-                });
-            });
-
-            // Initialize ClipboardJS
-            var clipboard = new ClipboardJS('.copy-code');
-
-            // Success feedback
-            clipboard.on('success', function (e) {
-                const icon = $(e.trigger).find('span.my-copy');
-                const icon1 = $(e.trigger).find('span.my-doubletick');
-                icon.addClass('d-none');
-                icon1.removeClass('d-none');
-
-                // icon.removeClass('my-copy').addClass('my-doubletick');
-                setTimeout(() => {
-                    icon.removeClass('d-none');
-                    icon1.addClass('d-none');
-                    // icon.removeClass('my-doubletick').addClass('my-copy');
-                }, 2000);
-
-                console.log('Copied:', e.text);
-            });
-
-            // Error feedback
-            clipboard.on('error', function (e) {
-                console.error('Copy failed:', e.action); // Log error
-            });
-
-
-            var channel = pusher.subscribe('clients');
-            channel.bind('clientsEdited', function(data) {
-                table.ajax.reload();
-            });
     });
+
+
+    new SearchableSelect({
+        selectId: 'user_id',
+        url: '/clients/all',
+        method: 'GET',
+        csrfToken: document.querySelector('meta[name="csrf-token"]').content,
+        renderOption: (option) => `
+            <div class="d-flex align-items-center">
+                <img src="${option.photo}" class="me-2" width="20" height="20">
+                <span>${option.full_name}</span>
+            </div>
+        `
+    });
+
+    new SearchableSelect({
+        selectId: 'edit_user_id',
+        url: '/clients/all',
+        method: 'GET',
+        csrfToken: document.querySelector('meta[name="csrf-token"]').content,
+        renderOption: (option) => `
+            <div class="d-flex align-items-center">
+                <img src="${option.photo}" class="me-2" width="20" height="20">
+                <span>${option.full_name}</span>
+            </div>
+        `
+    });
+
+
 
 </script>
 
